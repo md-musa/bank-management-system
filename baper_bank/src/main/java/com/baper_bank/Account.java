@@ -1,32 +1,33 @@
 package com.baper_bank;
 
 public class Account {
-    private int accountId;
+    private int accountNumber;
     private double balance = 0;
-    private int customerId;
+    private int userId;
+    // public String accountType;
 
-    public int getAccountId() {
-        return accountId;
+    public int getAccountNumber() {
+        return accountNumber;
     }
 
     public double getBalance() {
         return balance;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setAccountNumber(int accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     // Account(owner: Customer) |

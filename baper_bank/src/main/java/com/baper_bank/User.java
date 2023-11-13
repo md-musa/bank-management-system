@@ -1,8 +1,10 @@
 package com.baper_bank;
 
-public class Customer {
-    int customerId;
+public class User {
+    int userId;
     String name;
+    String email;
+    String password;
     String address;
     String phoneNumber;
 

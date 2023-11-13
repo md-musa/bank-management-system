@@ -1,5 +1,6 @@
 package com.baper_bank;
 
+import java.beans.Customizer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,50 +9,64 @@ import java.util.Scanner;
 import com.baper_bank.utils.IOUtil;
 
 public class BankSystem {
+    User currentUser;
+    Account currentAccount;
+    String currentUserRole;
 
-    List<Customer> customers = new ArrayList<Customer>();
+    List<User> customers = new ArrayList<User>();
+
+    List<User> admins = new ArrayList<User>();
     List<Account> accounts = new ArrayList<Account>();
     List<Transaction> transactions = new ArrayList<Transaction>();
 
-    protected int addCustomer() {
+    protected int addUser() {
         int lastCustomerId = 1;
         if (customers.size() > 0)
-            lastCustomerId = this.customers.get(this.customers.size() - 1).customerId;
+            lastCustomerId = this.customers.get(this.customers.size() - 1).userId;
 
         Scanner sc = new Scanner(System.in);
-        Customer nc = new Customer();
+        User newUser = new User();
         System.out.println("Account holder Name: ");
-        nc.name = sc.nextLine();
-        System.out.println("Account holder Address: ");
-        nc.address = sc.nextLine();
-        System.out.println("Account holder Phone: ");
-        nc.phoneNumber = sc.nextLine();
-        nc.customerId = lastCustomerId + 1;
+        newUser.name = sc.nextLine();
 
-        customers.add(nc);
-        return nc.customerId;
+        System.out.println("Account holder Email: ");
+        newUser.email = sc.nextLine();
+
+        System.out.println("Account holder Password: ");
+        newUser.password = sc.nextLine();
+
+        System.out.println("Account holder Address: ");
+        newUser.address = sc.nextLine();
+
+        System.out.println("Account holder Phone: ");
+        newUser.phoneNumber = sc.nextLine();
+
+        newUser.userId = lastCustomerId + 1;
+
+        customers.add(newUser);
+        return newUser.userId;
     }
 
-    public void removeCustomer(int customerId) {
+    public void removeCustomer(int userId) {
         for (int i = 0; i < customers.size(); i++) {
-            if (customerId == customers.get(i).customerId) {
+            if (userId == customers.get(i).userId) {
                 customers.remove(i);
-                System.out.println("Customer with id: " + customerId + " removed successfully");
+                System.out.println("Customer with id: " + userId + " removed successfully");
                 return;
             }
         }
-        System.out.println("Customer with id: " + customerId + " does not exist");
+        System.out.println("Customer with id: " + userId + " does not exist");
     }
 
     public void addAccount() {
-        int customerId = this.addCustomer();
+        int userId = this.addUser();
         int lastAN = 1;
         if (accounts.size() > 0)
-            lastAN = this.accounts.get(this.accounts.size() - 1).getAccountId() + 1;
+            lastAN = this.accounts.get(this.accounts.size() - 1).getAccountNumber() + 1;
 
         Account ac = new Account();
-        ac.setAccountId(lastAN);
-        ac.setCustomerId(customerId);
+        ac.setAccountNumber(lastAN);
+        ac.setUserId(userId);
         accounts.add(ac);
 
         System.out.println("Account created successfully\n");
@@ -60,50 +75,63 @@ public class BankSystem {
 
     public void deposit() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("\nEnter account number: ");
-        int AN = sc.nextInt();
         System.out.println("\nEnter amount: ");
         double amount = sc.nextDouble();
 
         if (amount < 0) {
-            System.out.println("Amount must be positive number");
+            System.out.println("\nAmount must be positive number");
+            IOUtil.pressEnterKey();
             return;
         }
-        for (int i = 0; i < accounts.size(); i++) {
-            if (accounts.get(i).getAccountId() == AN) {
-                Account ac = accounts.get(i);
-                ac.setBalance(ac.getBalance() + amount);
-                System.out.println("Amount " + amount + " is has been deposited\n");
-                return;
-            }
-        }
-        System.out.println("Something went wrong");
+
+        currentAccount.setBalance(currentAccount.getBalance() + amount);
+        System.out.println("\nAmount " + amount + " has been deposited\n");
+        IOUtil.pressEnterKey();
     }
 
     public void withdraw() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("\nEnter account number: ");
-        int AN = sc.nextInt();
         System.out.println("\nEnter amount: ");
         double amount = sc.nextDouble();
 
-        if (amount < 0) {
-            System.out.println("Amount must be positive number");
+        System.out.println("\nEnter password: ");
+        String password = sc.next();
+
+        if (!currentUser.password.equals(password)) {
+            System.out.println("\nInvalid password");
+            IOUtil.pressEnterKey();
             return;
         }
-        for (int i = 0; i < accounts.size(); i++) {
-            if (accounts.get(i).getAccountId() == AN) {
-                Account ac = accounts.get(i);
-                if (ac.getBalance() < amount) {
-                    System.out.println("Not have sufficient balance");
-                    return;
-                }
-                ac.setBalance(ac.getBalance() - amount);
-                System.out.println("Amount " + amount + " is has been withdrawn\n");
-                return;
-            }
+
+        if (amount < 0) {
+            System.out.println("\nAmount must be positive number");
+            return;
         }
-        System.out.println("Something went wrong");
+
+        if (currentAccount.getBalance() < amount) {
+            System.out.println("\nYou don't have sufficient balance\n");
+            IOUtil.pressEnterKey();
+            return;
+        }
+
+        currentAccount.setBalance(currentAccount.getBalance() - amount);
+        System.out.println("\nAmount " + amount + " is has been withdrawn");
+        IOUtil.pressEnterKey();
+
+        // for (int i = 0; i < accounts.size(); i++) {
+        // if (accounts.get(i).getAccountNumber() == currentAccount.getAccountNumber())
+        // {
+        // Account ac = accounts.get(i);
+        // if (ac.getBalance() < amount) {
+        // System.out.println("Not have sufficient balance");
+        // return;
+        // }
+        // ac.setBalance(ac.getBalance() - amount);
+        // System.out.println("Amount " + amount + " is has been withdrawn\n");
+        // IOUtil.pressEnterKey();
+        // return;
+        // }
+        // }
     }
 
     public void transfer() {
@@ -125,10 +153,10 @@ public class BankSystem {
         Account sender = null;
         Account receiver = null;
         for (int i = 0; i < accounts.size(); i++) {
-            if (accounts.get(i).getAccountId() == senderAN)
+            if (accounts.get(i).getAccountNumber() == senderAN)
                 sender = accounts.get(i);
 
-            if (accounts.get(i).getAccountId() == receiverAN)
+            if (accounts.get(i).getAccountNumber() == receiverAN)
                 receiver = accounts.get(i);
         }
 
@@ -152,6 +180,7 @@ public class BankSystem {
         transactions.add(tc);
 
         System.out.println(amount + " is transferred successfully to A/N: " + receiverAN);
+        IOUtil.pressEnterKey();
     }
 
     public void showAllAccounts() {
@@ -159,10 +188,10 @@ public class BankSystem {
         for (int i = 0; i < accounts.size(); i++) {
             Account ac = accounts.get(i);
             for (int j = 0; j < customers.size(); j++) {
-                if (ac.getCustomerId() == customers.get(j).customerId) {
+                if (ac.getUserId() == customers.get(j).userId) {
 
                     System.out.print("| " +
-                            ac.getAccountId() + "  " +
+                            ac.getAccountNumber() + "  " +
                             customers.get(j).name + "  " +
                             customers.get(j).address + "  " + ac.getBalance() + " |\n");
                     break;
@@ -171,12 +200,14 @@ public class BankSystem {
 
         }
         System.out.println("--------------------------");
+        IOUtil.pressEnterKey();
 
     }
 
     public void showMenu() {
-        System.out.println("-------Welcome to Baper Bank--------");
-        System.out.println("1. Create account");
+        System.out.println("\n\n-------------Welcome to Baper Bank------------------");
+        System.out.println("Balance: " + this.currentAccount.getBalance());
+        System.out.println("\n1. Create account");
         System.out.println("2. Deposit");
         System.out.println("3. Withdraw");
         System.out.println("4. Transfer money");
@@ -197,19 +228,87 @@ public class BankSystem {
         else if (serial == 6)
             checkBalance();
 
-        System.out.println("------------------------------------");
+        System.out.println("------------------------------------\n");
 
     }
 
     public void checkBalance() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter your Account number: ");
-        int an = sc.nextInt();
+
         for (int i = 0; i < accounts.size(); i++) {
-            if (an == accounts.get(i).getAccountId()) {
+            if (currentAccount.getAccountNumber() == accounts.get(i).getAccountNumber()) {
                 System.out.print("Balance: " + accounts.get(i).getBalance() + "\n");
             }
         }
         IOUtil.pressEnterKey();
+    }
+
+    public boolean login() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("--------Login as---------");
+        System.out.println("1. Customer");
+        System.out.println("2. Admin");
+        System.out.println("3. Super Admin");
+        System.out.println("\nPlease enter to perform: ");
+
+        int que = sc.nextInt();
+        if (!(que > 0 && que < 3)) {
+            System.out.println("\nPlease enter valid number: ");
+            this.login();
+        }
+
+        System.out.println("\nEnter email: ");
+        String email = sc.next();
+        System.out.println("\nEnter password: ");
+        String password = sc.next();
+
+        if (que == 1) {
+            User customer = null;
+            int index = 0;
+
+            for (int i = 0; i < customers.size(); i++) {
+                if (customers.get(i).email.equals(email)) {
+                    customer = customers.get(i);
+                    index = i;
+                }
+            }
+
+            if (customer == null) {
+                System.out.println("Invalid email!\n");
+                return false;
+            }
+            if (!customer.password.equals(password)) {
+                System.out.println("Invalid password!\n");
+                return false;
+            }
+
+            this.currentUser = customer;
+            this.currentUserRole = "CUSTOMER";
+            this.currentAccount = accounts.get(index);
+            return true;
+        }
+        if (que == 2) {
+            User admin = null;
+
+            for (User ad : admins) {
+                if (ad.email == email) {
+                    admin = ad;
+                }
+            }
+
+            if (admin == null) {
+                System.out.println("Invalid email!\n");
+                return false;
+            }
+            if (admin.password != password) {
+                System.out.println("Invalid password!\n");
+                return false;
+            }
+
+            this.currentUser = admin;
+            this.currentUserRole = "ADMIN";
+            IOUtil.pressEnterKey();
+            return true;
+        }
+        return false;
     }
 }
