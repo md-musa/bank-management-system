@@ -6,7 +6,7 @@ import com.baper_bank.utils.IOUtil;
 
 public class AdminController {
 
-    protected int addUser() {
+    private int addUser() {
         int lastCustomerId = 1;
         if (BankSystem.customers.size() > 0)
             lastCustomerId = BankSystem.customers.get(BankSystem.customers.size() - 1).userId;
@@ -32,17 +32,6 @@ public class AdminController {
 
         BankSystem.customers.add(newUser);
         return newUser.userId;
-    }
-
-    public void removeCustomer(int userId) {
-        for (int i = 0; i < BankSystem.customers.size(); i++) {
-            if (userId == BankSystem.customers.get(i).userId) {
-                BankSystem.customers.remove(i);
-                System.out.println("Customer with id: " + userId + " removed successfully");
-                return;
-            }
-        }
-        System.out.println("Customer with id: " + userId + " does not exist");
     }
 
     public void addAccount() {
@@ -79,5 +68,8 @@ public class AdminController {
         }
         System.out.println("--------------------------");
         IOUtil.pressEnterKey();
+    }
+
+    public void showAllTransactionHistory() {
     }
 }
