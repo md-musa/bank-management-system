@@ -1,5 +1,6 @@
 package com.baper_bank;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.baper_bank.utils.IOUtil;
@@ -32,7 +33,10 @@ public class CustomerController {
         }
 
         ca.setBalance(ca.getBalance() - amount);
-        System.out.println("\nAmount " + amount + " has been withdrawn");
+        System.out.println("\n|---------------------------------------------|");
+        System.out.println("|  Amount " + amount + " has been withdrawn            |");
+        System.out.println("|---------------------------------------------|");
+
         IOUtil.pressEnterKey();
     }
 
@@ -107,16 +111,26 @@ public class CustomerController {
     }
 
     public void showTransactionHistory() {
-        System.out.println("--------Your all transactions history--------- ");
+        List<Transaction> trns = BankSystem.transactions;
 
-        for (int i = 0; i < BankSystem.transactions.size(); i++) {
-            Transaction tc = BankSystem.transactions.get(i);
-            System.out.println(tc.transactionId + " " + tc.timestamp + " " + tc.amount);
+        System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-20s |\n",
+                "Transaction ID", "Sender AN", "Receiver AN", "Amount", "Timestamp");
+        System.out.println(
+                "|-----------------|----------------|----------------|------------|----------------------|");
 
-            // System.out.printf("| %-20s | %-10s |\n", "Transaction Id", "Amount");
-            // System.out.printf("----------------------------------\n");
-            // System.out.printf("| %-20s | %10d |\n", tc.transactionId, tc.amount);
+        for (int i = 0; i < trns.size(); i++) {
+            Transaction trn = trns.get(i);
+
+            if (trn.senderAN == BankSystem.currentAccount.getAccountNumber()
+                    || trn.receiverAN == BankSystem.currentAccount.getAccountNumber()) {
+
+                System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-20s |\n",
+                        trn.transactionId, trn.senderAN, trn.receiverAN, trn.amount,
+                        trn.timestamp);
+            }
         }
+        System.out.println(
+                "|-----------------|----------------|----------------|------------|----------------------|\n");
 
         IOUtil.pressEnterKey();
     }

@@ -70,7 +70,9 @@ public class Main {
         }
 
         while (true) {
-            // IOUtil.clearConsole();
+            System.out.println("\n\n|------------------------------------------------------|");
+            System.out.println("|                   BAPER BANK                         |");
+            System.out.println("|------------------------------------------------------|");
             if (BankSystem.currentUserRole == null)
                 bank.login();
             else if (BankSystem.currentUserRole.equals("CUSTOMER"))

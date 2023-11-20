@@ -15,8 +15,11 @@ public class BankSystem {
     static List<Transaction> transactions = new ArrayList<Transaction>();
 
     public void showCustomerMenu() {
-        System.out.println("\n\n-------------Welcome to Baper Bank------------------");
-        System.out.println("Balance: " + currentAccount.getBalance() + "        Role: Customer\n");
+        System.out.println("| Name: " + currentUser.name +
+                "     Balance: " + currentAccount.getBalance()
+                + "   Role: Customer  |");
+        System.out.println("|------------------------------------------------------|\n");
+
         System.out.println("1. Withdraw");
         System.out.println("2. Deposit");
         System.out.println("3. Send money");
@@ -42,13 +45,11 @@ public class BankSystem {
             System.out.println("\nPlease enter valid number...\n");
         }
 
-        System.out.println("------------------------------------\n");
-
     }
 
     public void showAdminMenu() {
-        System.out.println("\n\n-------------Welcome to Baper Bank------------------");
-        System.out.println("Role: Admin\n");
+
+        System.out.println("Name: " + currentUser.name + "       Role: Admin\n");
         System.out.println("1. Create account");
         System.out.println("2. Show all accounts");
         System.out.println("3. All transaction history");
@@ -71,8 +72,6 @@ public class BankSystem {
             System.out.println("\nPlease enter valid number...\n");
         }
 
-        System.out.println("------------------------------------\n");
-
     }
 
     public void logOut() {
@@ -83,9 +82,9 @@ public class BankSystem {
 
     public boolean login() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("--------Login as---------");
-        System.out.println("1. Customer");
-        System.out.println("2. Admin");
+        System.out.println("Login as: ");
+        System.out.println("1. Customer ");
+        System.out.println("2. Admin ");
         System.out.println("3. Super Admin");
         System.out.println("\nPlease enter to perform: ");
 

@@ -18,4 +18,10 @@ public class IOUtil {
             System.out.println("\b");
         }
     }
+
+    public static void printAlert(String msg) {
+        System.out.println("\n|---------------------------------------------|");
+        System.out.println("|  " + msg + "            |");
+        System.out.println("|---------------------------------------------|\n");
+    }
 }
