@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.baper_bank.utils.IOUtil;
-
 public class BankSystem {
     static User currentUser;
     static Account currentAccount;
@@ -18,7 +16,7 @@ public class BankSystem {
 
     public void showCustomerMenu() {
         System.out.println("\n\n-------------Welcome to Baper Bank------------------");
-        System.out.println("Balance: " + this.currentAccount.getBalance() + "        Role: Customer");
+        System.out.println("Balance: " + currentAccount.getBalance() + "        Role: Customer\n");
         System.out.println("1. Withdraw");
         System.out.println("2. Deposit");
         System.out.println("3. Send money");
@@ -122,17 +120,19 @@ public class BankSystem {
                 return false;
             }
 
-            this.currentUser = customer;
-            this.currentUserRole = "CUSTOMER";
-            this.currentAccount = accounts.get(index);
+            currentUser = customer;
+            currentUserRole = "CUSTOMER";
+            currentAccount = accounts.get(index);
             return true;
         }
-        if (choice == 2) {
+
+        else if (choice == 2) {
             User admin = null;
 
             for (int i = 0; i < admins.size(); i++) {
                 if (admins.get(i).email.equals(email)) {
-                    admin = customers.get(i);
+                    admin = admins.get(i);
+                    break;
                 }
             }
 
@@ -140,14 +140,13 @@ public class BankSystem {
                 System.out.println("Invalid email!\n");
                 return false;
             }
-            if (admin.password != password) {
+            if (!password.equals(admin.password)) {
                 System.out.println("Invalid password!\n");
                 return false;
             }
 
-            this.currentUser = admin;
-            this.currentUserRole = "ADMIN";
-            IOUtil.pressEnterKey();
+            currentUser = admin;
+            currentUserRole = "ADMIN";
             return true;
         }
         return false;

@@ -1,5 +1,6 @@
 package com.baper_bank;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.baper_bank.utils.IOUtil;
@@ -13,19 +14,19 @@ public class AdminController {
 
         Scanner sc = new Scanner(System.in);
         User newUser = new User();
-        System.out.println("Account holder Name: ");
+        System.out.println("Enter Name: ");
         newUser.name = sc.nextLine();
 
-        System.out.println("Account holder Email: ");
+        System.out.println("Enter Email: ");
         newUser.email = sc.nextLine();
 
-        System.out.println("Account holder Password: ");
+        System.out.println("Enter Password: ");
         newUser.password = sc.nextLine();
 
-        System.out.println("Account holder Address: ");
+        System.out.println("Enter Address: ");
         newUser.address = sc.nextLine();
 
-        System.out.println("Account holder Phone: ");
+        System.out.println("Enter Phone: ");
         newUser.phoneNumber = sc.nextLine();
 
         newUser.userId = lastCustomerId + 1;
@@ -35,41 +36,66 @@ public class AdminController {
     }
 
     public void addAccount() {
+        List<Account> accounts = BankSystem.accounts;
         int userId = this.addUser();
-        int lastAN = 1;
-        if (BankSystem.accounts.size() > 0)
-            lastAN = BankSystem.accounts.get(BankSystem.accounts.size() - 1).getAccountNumber() + 1;
+        int lastAN = 1000;
+        if (accounts.size() > 0)
+            lastAN = accounts.get(accounts.size() - 1).getAccountNumber() + 1;
 
         Account ac = new Account();
         ac.setAccountNumber(lastAN);
         ac.setUserId(userId);
-        BankSystem.accounts.add(ac);
+        accounts.add(ac);
 
-        System.out.println("Account created successfully\n");
+        System.out.println("=> Account has been created successfully\n");
         System.out.println("A/N: " + lastAN + "\n\n");
     }
 
     public void showAllAccounts() {
+        List<Account> accounts = BankSystem.accounts;
+        List<User> customers = BankSystem.customers;
 
-        System.out.println("-------All Accounts--------");
-        for (int i = 0; i < BankSystem.accounts.size(); i++) {
-            Account ac = BankSystem.accounts.get(i);
-            for (int j = 0; j < BankSystem.customers.size(); j++) {
-                if (ac.getUserId() == BankSystem.customers.get(j).userId) {
+        System.out.println("-------All Accounts--------\n");
 
-                    System.out.print("| " +
-                            ac.getAccountNumber() + "  " +
-                            BankSystem.customers.get(j).name + "  " +
-                            BankSystem.customers.get(j).address + "  " + ac.getBalance() + " |\n");
+        System.out.printf("| %-10s | %-20s | %-15s | %-10s |\n", "Account #", "Name", "Address", "Balance");
+        System.out.println("|------------|----------------------|-----------------|------------|");
+
+        for (int i = 0; i < accounts.size(); i++) {
+            Account ac = accounts.get(i);
+
+            for (int j = 0; j < customers.size(); j++) {
+
+                if (ac.getUserId() == customers.get(j).userId) {
+
+                    System.out.printf("| %-10s | %-20s | %-15s | %-10s |\n",
+                            ac.getAccountNumber(), customers.get(j).name, customers.get(j).address, ac.getBalance());
                     break;
                 }
             }
-
         }
-        System.out.println("--------------------------");
+        System.out.println("|------------|----------------------|-----------------|------------|");
         IOUtil.pressEnterKey();
     }
 
     public void showAllTransactionHistory() {
+        List<Transaction> trns = BankSystem.transactions;
+
+        System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-20s |\n",
+                "Transaction ID", "Sender AN", "Receiver AN", "Amount", "Timestamp");
+        System.out.println(
+                "|-----------------|----------------|----------------|------------|----------------------|");
+
+        for (int i = 0; i < trns.size(); i++) {
+            Transaction trn = trns.get(i);
+
+            // Assuming `trn` is an instance of your Transaction class
+            System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-20s |\n",
+                    trn.transactionId, trn.senderAN, trn.receiverAN, trn.amount,
+                    trn.timestamp);
+        }
+        System.out.println(
+                "|-----------------|----------------|----------------|------------|----------------------|\n");
+
+        IOUtil.pressEnterKey();
     }
 }

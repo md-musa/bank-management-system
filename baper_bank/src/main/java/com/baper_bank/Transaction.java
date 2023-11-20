@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 public class Transaction {
-    String transactionId = UUID.randomUUID().toString();
+    String transactionId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     double amount;
     int senderAN;
