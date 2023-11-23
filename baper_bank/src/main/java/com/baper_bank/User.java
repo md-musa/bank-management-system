@@ -1,12 +1,12 @@
 package com.baper_bank;
 
 public class User {
-    int userId;
-    String name;
-    String email;
-    String password;
-    String address;
-    String phoneNumber;
+    public int userId;
+    public String name;
+    public String email;
+    public String password;
+    public String address;
+    public String phoneNumber;
 
     // +------------------------------------+
     // | + Customer(name: String, address: |

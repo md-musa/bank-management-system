@@ -7,13 +7,16 @@ import com.baper_bank.utils.IOUtil;
 
 public class CustomerController {
     public void withdraw() {
+
         Account ca = BankSystem.currentAccount;
+
         Scanner sc = new Scanner(System.in);
         System.out.println("\nEnter amount: ");
-        double amount = sc.nextDouble();
+        int amount = sc.nextInt();
 
         if (amount <= 0) {
             System.out.println("\nPlease enter positive number...");
+            IOUtil.pressEnterKey();
             return;
         }
 
@@ -113,7 +116,7 @@ public class CustomerController {
     public void showTransactionHistory() {
         List<Transaction> trns = BankSystem.transactions;
 
-        System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-20s |\n",
+        System.out.printf("\n\n| %-15s | %-15s | %-15s | %-10s | %-20s |\n",
                 "Transaction ID", "Sender AN", "Receiver AN", "Amount", "Timestamp");
         System.out.println(
                 "|-----------------|----------------|----------------|------------|----------------------|");
@@ -127,10 +130,10 @@ public class CustomerController {
                 System.out.printf("| %-15s | %-15s | %-15s | %-10s | %-20s |\n",
                         trn.transactionId, trn.senderAN, trn.receiverAN, trn.amount,
                         trn.timestamp);
+                System.out.println(
+                        "|-----------------|----------------|----------------|------------|----------------------|");
             }
         }
-        System.out.println(
-                "|-----------------|----------------|----------------|------------|----------------------|\n");
 
         IOUtil.pressEnterKey();
     }

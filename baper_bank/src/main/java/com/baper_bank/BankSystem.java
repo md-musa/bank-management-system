@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class BankSystem {
-    static User currentUser;
-    static Account currentAccount;
-    static String currentUserRole;
+    public static User currentUser;
+    public static Account currentAccount;
+    public static String currentUserRole;
 
-    static List<User> customers = new ArrayList<User>();
-    static List<User> admins = new ArrayList<User>();
-    static List<Account> accounts = new ArrayList<Account>();
-    static List<Transaction> transactions = new ArrayList<Transaction>();
+    public static List<User> customers = new ArrayList<User>();
+    public static List<User> admins = new ArrayList<User>();
+    public static List<Account> accounts = new ArrayList<Account>();
+    public static List<Transaction> transactions = new ArrayList<Transaction>();
 
     public void showCustomerMenu() {
         System.out.println("| Name: " + currentUser.name +
@@ -49,7 +49,8 @@ public class BankSystem {
 
     public void showAdminMenu() {
 
-        System.out.println("Name: " + currentUser.name + "       Role: Admin\n");
+        System.out.println("|  Name: " + currentUser.name + "          Role: Admin                     |");
+        System.out.println("|-------------------------------------------------------|\n");
         System.out.println("1. Create account");
         System.out.println("2. Show all accounts");
         System.out.println("3. All transaction history");

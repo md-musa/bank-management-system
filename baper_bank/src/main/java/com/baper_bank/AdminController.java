@@ -57,6 +57,7 @@ public class AdminController {
 
         System.out.println("-------All Accounts--------\n");
 
+        System.out.println("|------------|----------------------|-----------------|------------|");
         System.out.printf("| %-10s | %-20s | %-15s | %-10s |\n", "Account #", "Name", "Address", "Balance");
         System.out.println("|------------|----------------------|-----------------|------------|");
 
